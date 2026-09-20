@@ -3,6 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
   "description": "A dynamic, animated single-page app for collecting romantic quotes in every language.",
   "scripts": {
     "dev": "vite",
