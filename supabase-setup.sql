@@ -25,6 +25,11 @@ create policy "Public can add quotes"
   on public.quotes for insert
   with check (true);
 
+create policy "Public can update quotes"
+  on public.quotes for update
+  using (true)
+  with check (true);
+
 create policy "Public can delete quotes"
   on public.quotes for delete
   using (true);

@@ -487,3 +487,24 @@ DEAD CSS
   no-scrollbar had lost their last callers across the redesigns.
   index.css 12.0 KB -> 10.9 KB of source. (Tailwind only emits used
   utilities, so this is tidiness rather than payload.)
+
+=====================================================================
+15. EDITING NEVER ACTUALLY SAVED
+=====================================================================
+Found while reading supabase-setup.sql before deploying.
+
+- The table had select, insert and delete policies but no UPDATE one.
+  Editing was added in round 13 without it, so Postgres affected zero
+  rows on every edit - and PostgREST reports that as 200 with an empty
+  body, not an error. supabase-js saw no error, the optimistic change
+  stayed on screen, and nothing reached the database. A reload lost it.
+- My verification of it in round 13 was wrong. I edited a verse, then
+  reverted it, then read the row - which matches the original whether
+  or not the write worked. Re-tested properly by reading the row while
+  the edit was still applied.
+- Fixed: added the update policy to the live database and to
+  supabase-setup.sql, so a fresh project gets it too.
+- Hardened so this class of bug cannot hide again: insert, update and
+  delete all ask for the affected row back with .select(), and treat
+  "no rows came back" as a failure - rollback plus the notice - rather
+  than as success. Security advisor clean afterwards.

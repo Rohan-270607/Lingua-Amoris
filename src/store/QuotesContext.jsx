@@ -142,9 +142,10 @@ function useQuotesStore() {
       supabase
         .from('quotes')
         .insert({ id: quote.id, text: quote.text, author: quote.author, language: quote.language })
-        .then(({ error }) => {
-          if (error) {
-            console.error('Failed to save quote:', error)
+        .select()
+        .then(({ data, error }) => {
+          if (error || !data || data.length === 0) {
+            console.error('Failed to save verse:', error ?? 'no row written')
             setSharedQuotes((prev) => prev.filter((q) => q.id !== quote.id))
             setWriteError('That verse could not be saved — it is not kept.')
           }
@@ -166,9 +167,10 @@ function useQuotesStore() {
         .from('quotes')
         .delete()
         .eq('id', id)
-        .then(({ error }) => {
-          if (error) {
-            console.error('Failed to delete quote:', error)
+        .select()
+        .then(({ data, error }) => {
+          if (error || !data || data.length === 0) {
+            console.error('Failed to delete verse:', error ?? 'no row removed')
             setWriteError('That verse could not be deleted — reload to see it again.')
           }
         })
@@ -204,9 +206,10 @@ function useQuotesStore() {
         .from('quotes')
         .update(fields)
         .eq('id', id)
-        .then(({ error }) => {
-          if (error) {
-            console.error('Failed to update quote:', error)
+        .select()
+        .then(({ data, error }) => {
+          if (error || !data || data.length === 0) {
+            console.error('Failed to update verse:', error ?? 'no row changed')
             if (previous) setSharedQuotes((prev) => prev.map((q) => (q.id === id ? previous : q)))
             setWriteError('That change could not be saved — it has been put back.')
           }
