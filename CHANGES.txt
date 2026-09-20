@@ -1,0 +1,489 @@
+LINGUA AMORIS — CHANGE LOG
+Project: T:\Lingua_Amoris          Last updated: 2026-09-19
+
+
+1. SETUP
+---------------------------------------------------------------------
+- Node.js was not installed on this machine. Installed v24.19.0 via
+  `winget install OpenJS.NodeJS.LTS`.
+- Scaffolded a Vite + React 19 + Tailwind CSS v4 + Framer Motion project.
+- Added React Router 7 and @supabase/supabase-js.
+- Dev server runs on port 5173 (`npm run dev`).
+
+
+2. STRUCTURE
+---------------------------------------------------------------------
+Started as a single page; rebuilt as a multi-page site.
+
+  Pages:  Home (/), Collection (/collection), Add (/add),
+          About (/about), 404
+  Shell:  RootLayout keeps nav/footer/background mounted across routes.
+          Page transitions use useOutlet() + AnimatePresence so the
+          outgoing page keeps rendering while it leaves.
+  Store:  QuotesContext — one source of truth, same API whether data is
+          local or shared.
+
+
+3. HOME PAGE (evolved over several rounds)
+---------------------------------------------------------------------
+- Stripped to just the title, an "Add a quote" button, and a
+  "Reveal the quotes" toggle. Tagline/eyebrow/extra sections removed.
+- Every saved quote floats around the title as a bubble:
+    * dormant  = heavily blurred, like shapes behind a foggy window
+    * revealed = sharp and readable, fading in as a staggered cascade
+- Bubbles are draggable — pick one up, drop it anywhere on the stage.
+- Clicking a bubble does NOT navigate. It morphs in place into a large
+  reading dialog via a shared Framer Motion layoutId, and morphs back
+  into the same spot on close (close button, Escape, or backdrop).
+- Revealing the quotes hides the title and buttons entirely — only the
+  bubbles remain. A right-to-left mouse/trackpad swipe on empty space
+  is the only way back.
+- Each opened quote shows one of 10 minimalist line-art scenes at the
+  bottom (moon, paper plane, birds, horizon, letter, mountains, candle,
+  rain window, bloom, two cups). The scene is derived from the quote's
+  id, so a given quote always opens with the same one.
+
+  Reverted along the way: a cursor-parallax version of the bubbles was
+  built and then removed in favour of drag-and-drop.
+
+
+4. SHARED STORAGE (Supabase) — LIVE
+---------------------------------------------------------------------
+- Quotes were localStorage-only; now they live in a real Supabase
+  Postgres table and sync live to every open tab.
+- Project "lingua-amoris" (ap-south-1, free tier) created, migration
+  applied, Realtime enabled, keys written to .env. Security advisor
+  came back clean.
+- Verified end to end: added a quote through the UI, confirmed the row
+  in the database, deleted it, confirmed it was gone.
+- No login — anyone with the link can read, add and delete any quote.
+- Falls back to the original localStorage behaviour automatically if
+  .env is missing.
+- About page and footer copy switch wording based on which mode is on.
+
+
+5. LOOK AND FEEL
+---------------------------------------------------------------------
+Font
+  Cormorant Garamond (serif) -> Comfortaa (rounded geometric sans).
+
+Palette — five versions; only the last is in place:
+  1. dusty rose / blush / champagne      (original)
+  2. dark gothic crimson + antique gold
+  3. earthy rust / cream / sage
+  4. light pastel pink / ivory / blue    (superseded mid-build)
+  5. CURRENT — "a rose, taken apart":
+       matte warm near-black   #0d0b09   page
+       raised surfaces         #1c1714 / #262019 / #332a21
+       rose red                #9e2233   the one vivid accent
+       leaf green              #2f4536 / #4a6b4f
+       rustic gold             #c5a253   hairlines, icons, dividers
+       lighter/deeper gold     #ddc48a / #a67c3d
+       warm ivory              #ece0cf   all text
+
+Opaque, no glassmorphism
+  - Every backdrop-blur removed; all panels are solid fills.
+  - The home page's frosted-glass pane deleted.
+  - Background reduced to a solid wash plus drifting hearts (the blurred
+    light orbs and vignette are gone).
+  - Film grain brought back over the black so it reads matte/textured.
+  - Card shadows are deep and colourless with a thin gold edge — no
+    coloured glow, which would read as gloss.
+
+Per-language colours
+  Each language gets a deterministic accent, on a hue arc running rose
+  red -> amber -> gold -> leaf green.
+
+
+6. NAVIGATION
+---------------------------------------------------------------------
+- Top bar reduced to the wordmark + a single Home pill.
+- Collection, About and Add removed from the top bar; adding a quote is
+  the home page's own call to action.
+- Footer still links to all four pages, so nothing is orphaned.
+- Mobile hamburger and its full-screen overlay menu deleted — pointless
+  with one link. The link renders inline at every width.
+
+
+7. NOTES / GOTCHAS WORTH REMEMBERING
+---------------------------------------------------------------------
+- Never write glob-style text like "prefix-*" inside a CSS comment.
+  A comment containing one broke the Tailwind v4 build with a confusing
+  "Cannot apply unknown utility class" error on an unrelated line.
+- Framer Motion maps x/y onto SVG *attributes*, which <circle> and <g>
+  don't have, so those animations silently froze. The vignette scenes
+  use CSS keyframes instead (the vg-* rules in index.css).
+- The browser preview console often shows stale errors from earlier
+  code after a reload — verify against fresh state before believing a
+  regression.
+
+
+8. STILL OPEN
+---------------------------------------------------------------------
+- Not deployed yet. vercel.json and public/_redirects are in place so
+  client-side routes won't 404 once it is; needs a Vercel/Netlify
+  account and the two VITE_SUPABASE_* env vars set on the host.
+- No git repository for this project yet.
+
+
+=====================================================================
+9. REDESIGN - "VELVET & GILT"  (replaces the archival look entirely)
+=====================================================================
+
+WHY
+- The archival version was flat: every surface sat within a couple of
+  percent of black, so nothing caught light and nothing had depth. The
+  Latin costume (CODICILLUS SECRETUS, FOLIO NO. I, MCMXXIV, NOTA III)
+  was decoration rather than design. All of it is gone.
+
+THE ROOM
+- One warm light source above the centre, a garnet pool low-left and a
+  laurel whisper low-right, over plum-black velvet, falling away into a
+  vignette. The source breathes on a 14s cycle.
+- Velvet nap + 5% film grain over the top so the black reads as cloth.
+- The fixed corner brackets and folio register were deleted
+  (ArchivalFrame.jsx removed).
+
+PALETTE (same token names, new values - nothing else had to change)
+- Ground   #060405 / #0b0709 / #150d11 / #1d1218 / #27171e / #33202a
+- Garnet   #4a0c1c / #a81e3c / ember #d9584e
+- Gilt     #8c6a23 / #c9a227 / #e9c972 / sheen #fff6da
+- Laurel   #1a2e1f / #4c7a55 / #8fbe97
+- Ink      #bca894 / #efe3d3 / #fbf5ec
+
+TYPE
+- Added Bodoni Moda (high-contrast didone) as font-title: the wordmark,
+  page headings and the 404.
+- Cormorant Garamond stays for anything read at length; Comfortaa stays
+  for tracked micro-labels.
+
+COMPONENTS
+- Buttons are pills now. Primary is struck gold with dark ink on it -
+  the only genuinely bright thing on the page - with a specular band
+  that travels across on hover. Ghost is a gilt outline on velvet.
+- Quote cards and floating cards: soft 20-22px radius, jewel-toned
+  gradient lit from the top-left, real three-stage shadow, gilt
+  hairline that brightens on hover. The chamfered plates are gone.
+- Language filter: gold pill for "All", the language's own accent
+  otherwise.
+- Ornaments reduced to Sparkle, Pip and Rule (a gilt hairline with a
+  lit diamond). Filament removed.
+
+THE SEALED LETTER (opening a quote)
+- A card now morphs into a closed envelope with a red wax seal, the
+  wax swells and cracks, the flap folds back over the top edge, and
+  the sheet rises out of it. ~2.3s, and skipped entirely under
+  prefers-reduced-motion.
+- The envelope is paper - manila #ded2b8, edge #c2b191 - and so is the
+  flap. The sheet inside is warm laid paper with two fold creases.
+- The writing takes the card's own colour: accentFor() gained ink and
+  inkSoft (the same hue, dark enough to read on paper). The vignettes
+  redraw in that ink too, via .vg-paper.
+
+FIXES ALONG THE WAY
+- The reading view is portalled to document.body. The page wrapper
+  animates `filter`, which makes it a stacking context, so no z-index
+  inside it could ever rise above the sticky register - the modal was
+  being painted under the nav bar.
+- Floating cards are clamped against their own half-width, so none is
+  ever sliced by the viewport edge; on a phone the bound falls back to
+  42vw and they stack down the middle.
+- Route changes reset scroll to the top (inner pages were opening
+  halfway down, under the register).
+- The vignettes are drawn larger.
+
+LETTER REFINEMENTS
+- The wax seal is now a rose - two rings of petals round a curled heart,
+  with laurel behind - and it sits on the point of the flap rather than
+  above it. It swells, comes loose and falls away before the flap moves.
+- Closing folds the letter back in: the sheet slides down into the
+  envelope, the flap comes down over it, the colour returns, and only
+  then does the envelope morph back into its card.
+- The opening runs slowly and in sequence, one attribute at a time -
+  letterhead, quote mark, the quote, the rule, the author, the language
+  stamp, the link, then the little scene - each easing up out of a blur.
+  About 5.5s end to end, collapsed to nothing under reduced motion.
+- Every letter is headed "OMNIA VINCIT AMOR" (Virgil, Eclogues X) in
+  small caps over a hairline - the same line on all of them.
+- Once open, the envelope is rimmed in the card's own colour while the
+  flap and inner frame stay paper.
+
+- The flap's corners were square against the envelope's 20px radius and
+  overhung it; they are rounded to 17px (the radius inside the 3px
+  border) so the flap tucks into the corner.
+- The quote now reads on the face of the sealed envelope, centred below
+  the rose, and fades out as the sheet rises to take over. It comes back
+  as the letter folds closed.
+- Removed the large decorative opening-quote glyph from the sheet.
+- The reading view is keyed per quote, so opening a different card
+  remounts it rather than reusing a stale instance (previously the
+  closing state could carry over and strand the letter open).
+
+=====================================================================
+10. THE ARCHIVE INDEX  (replaces the floating quotes)
+=====================================================================
+
+Built to the supplied reference. The drifting, draggable bubbles are
+gone; FloatingQuotes.jsx was deleted and the sealed letter moved to its
+own file (SealedLetter.jsx) so the catalogue can open it.
+
+SHELL (RootLayout)
+- A title strip across the top: codex glyph, "Lingua Amoris - Curated
+  Archive Collection" centred.
+- The page body holds a rounded panel between two perforated margins
+  (binder dots down each side); the colophon sits below the panel.
+
+REGISTER (NavBar)
+- Imprint left: "Lingua Amoris" over "ARCHIVUM PRIVATUM · CURATED".
+- Index right: HOME / INDEX / FOLIOS, active one underlined in crimson.
+- The single crimson action, "◆ ADD A QUOTE", then an "LA" medallion.
+
+INDEX PAGE (Home)
+- Hero: codex icon, the guillemet epigraph, a gold diamond ornament,
+  and "FOLIO SELECTA · {n} IDIOMATA · SERIE INTIMA".
+- Chip rail: "◆ ALL IDIOMATA (n)" in crimson when active, then one chip
+  per language with its count. Filters the grid for real.
+- Masonry of catalogue plates, 1/2/3 columns by width.
+- Catalogue foot: "CODEX PAGINA {n}", working folio pagination
+  ("FOLIO I OF I"), and "SIGILLUM ARCHIVO AUTHENTICUM".
+
+CATALOGUE PLATE (ArchiveCard)
+- Accession tag ("SP / 001 / I") tinted by language, language name,
+  and a chevron that leans on hover.
+- The line in guillemets.
+- On a third of the cards (picked from the quote's id) an engraved
+  plate: one of the ten vignette scenes, captioned "FOL. {n} · {LANG}".
+- Medallion of the author's initials, the name, and a provenance line.
+- A bookmark toggle, kept per browser in localStorage.
+- The whole plate opens the sealed letter; the bookmark stays its own
+  control (a stretched hit area rather than nested buttons).
+
+COLOPHON (Footer)
+- "Lingua Amoris" over "EX LIBRIS · NUNC DUAL LANGUAGE FLORILEGIUM",
+  then INDEX CODICUM / FOLIOS & LEAVES / COLOPHON in crimson and
+  "© MMXXIV · GLORIAM & AMOR".
+
+The background was flattened to suit: the warm bloom is about a third
+of its old strength and the grain is lighter, so the page reads as the
+reference's near-black sheet rather than a lit room.
+
+NOT REPRODUCIBLE FROM THE DATA
+The reference shows fields a quote does not have. Left out or replaced:
+- Translation lines under each quote - no translation field.
+- Origin provenance ("TORINO · CIRCA 1950") - replaced with the one
+  provenance fact there is, when the quote was kept.
+- Bespoke plate captions ("LES OISEAUX DE HAUTEVILLE") and the
+  "LETTERPRESS FOLIO · POÈMES INÉDITS / 156" chip - no such data.
+- Per-language marginalia (the moon glyph, "MEIJI TRANSLATION").
+
+LETTER
+- The envelope's face now carries the Latin motto, not the quote, and
+  the motto was removed from the sheet so it is not said twice.
+
+INDEX TRIMMED
+- The engraved plates came off the catalogue cards. They only landed on
+  a third of them, which read as inconsistent rather than varied; the
+  cards are text now and the scene belongs to the opened letter, where
+  it still appears.
+- Removed the language chip rail from the index. Filtering by language
+  still lives on the Index page (/collection) and on a letter's
+  "See all" link.
+- Removed the gold "FOLIO SELECTA · N IDIOMATA · SERIE INTIMA" line.
+- The epigraph is French now: "Il n'y a qu'un bonheur dans la vie,
+  c'est d'aimer et d'etre aime." (George Sand) - the guillemets the
+  design already used were always hers.
+- A small "See translation" pill under the epigraph opens the English
+  reading and the attribution, and flips to "Hide translation".
+
+=====================================================================
+11. THE COVER
+=====================================================================
+- New opening page at "/" (Cover.jsx): the name in gold leaf on the
+  velvet ground and nothing else, with a bobbing chevron and
+  "SWIPE UP TO OPEN". It sits OUTSIDE RootLayout, so none of the title
+  strip, register or colophon chrome appears on it.
+- Swiping up lifts the cover off the screen and opens the archive.
+  Accepts a trackpad/wheel gesture in either direction (machines
+  disagree about which way is "up"), a touch swipe, a dragged mouse,
+  ArrowUp/ArrowDown/PageDown/Enter/Space, or a click on the hint.
+  All five paths verified.
+- The archive index moved from "/" to "/archive" (Home.jsx renamed
+  Archive.jsx). Register: HOME -> "/" (the cover), INDEX -> "/archive",
+  FOLIOS -> "/about". The colophon's "Folios & Leaves" follows.
+
+FIXED WHILE IN THERE
+- RootLayout wrapped PageTransition (which renders <main>) in a second
+  <main>. Nested mains; the wrapper is a <div> now.
+- The sealed letter never unmounted. Its AnimatePresence exit hung once
+  the shared-layout twin moved into a CSS `columns` container, so the
+  dialog stayed in the DOM and `body { overflow: hidden }` was never
+  restored - which left the archive unscrollable after closing a
+  letter. The letter no longer relies on AnimatePresence at all: the
+  fold-back already does the visual work, so the overlay fades at the
+  end of it and the component unmounts plainly. `onClose` is a
+  useCallback again so the fold-back timer is never restarted.
+  Verified: unmounts by ~1.1s, body overflow restored.
+
+NOTE
+- Supabase REST reads/writes are fine (verified 200 + live rows), but
+  the realtime WebSocket fails to connect from inside the preview pane.
+  Quotes still save and load; other viewers just will not see changes
+  live until they reload. Likely the pane's sandbox blocking wss - worth
+  re-checking in a normal browser before treating it as a real fault.
+
+=====================================================================
+12. STRIPPED BACK, AND JEWELLED
+=====================================================================
+- Removed the catalogue foot strip entirely (CODEX PAGINA, the folio
+  pagination, SIGILLUM ARCHIVO AUTHENTICUM) and the colophon footer.
+  Footer.jsx deleted. With the pagination gone the index no longer
+  pages - every quote is shown, so nothing became unreachable.
+- Removed the language page and the about page. Collection.jsx,
+  About.jsx, QuoteGrid.jsx, LanguageFilter.jsx and Reveal.jsx deleted.
+  The register is now HOME (the cover), INDEX (the archive) and the
+  crimson ADD A QUOTE. Three links that pointed at /collection - two on
+  Add, one on the 404 - were repointed to /archive.
+- Card and letter colour is per-entry now, not per-language, rotated
+  strictly by position so neighbours never share a jewel.
+
+THE JEWELS
+  ruby 348 | burnt orange 20 | gold 40 | yellow 52 | emerald 158
+  A first attempt hashed each quote into the old 345->125 rose arc.
+  It looked random in code but read as one colour on screen: nearly
+  nine tenths of that span is gold-green, so all seven cards landed
+  olive. Hence a short curated ring instead of a hashed arc. Purple and
+  blue were tried and dropped; the warm trio carries the shine and the
+  ruby and emerald stop the page smearing into one amber.
+  Gold and yellow get a lightness lift (`dl`) so they read as leaf
+  rather than olive; the paper ink is left dark so it stays legible.
+- A letter wears the jewel of the card it grew from (verified: card
+  hue 275 -> letter ink and border 276 before the palette swap).
+
+BLING PASS
+- The accents are cut stones now rather than flat swatches. Each jewel
+  gained a `face` (a facet gradient running across it) and a `sheen`
+  (a lit top edge, a shaded under-edge, and a little of its own colour
+  thrown beneath). Saturation on the text and border came up a notch.
+  The accession tag and the author medallion are both set in it.
+- Emerald dropped. The set is four, all warm:
+  ruby 348 | burnt orange 20 | gold 40 | yellow 52
+
+THE ARROW IS THE BUTTON
+- The chevron never worked. It was a bare icon inside a header at
+  z-[2], sitting above the stretched hit area at z-[1], so clicks on
+  the one element that looks like a button were swallowed by the
+  header and never reached it.
+- It is a real button now, and the only way into a letter: the
+  stretched overlay is gone, so clicking the body of a plate does
+  nothing. The arrow takes the plate's own jewel on hover and focus,
+  and has a 28px target.
+- Cleaned up what only existed to sit above that overlay: the z-[2] on
+  the header, quote and footer, the z-[3] on the bookmark, and the
+  stopPropagation the bookmark needed to escape it.
+
+=====================================================================
+13. THE RECOMMENDATIONS ROUND  (all but deploy and git)
+=====================================================================
+
+EDIT AND DELETE AN ENTRY
+- Until now delete only existed on the Add page, in the "added this
+  visit" list - so anything added in an earlier session could never be
+  removed or corrected from the UI at all. Both now live on the opened
+  letter: Edit turns the sheet into fields (quote, author, language),
+  Delete asks "Withdraw this entry?" first.
+- New `updateQuote` in the store, optimistic like add and delete, and
+  it keeps the previous row so a failed write is put back.
+  Verified round-trip: author edited, card updated, Supabase row
+  updated, then reverted.
+
+COLOUR IS STABLE AGAIN
+- Colour was keyed off array position, so adding one quote re-coloured
+  the whole page and a letter you remembered as ruby came back orange.
+  It is keyed off the quote id now, so a line keeps its jewel forever.
+- That only works with a hash that actually spreads. The old
+  `hash * 31` mix left UUIDs - which share most of their shape - in the
+  same bucket. Replaced with FNV-1a plus an avalanche finalizer.
+  Across the seven entries: 2 ruby, 2 orange, 2 gold, 1 yellow.
+
+SEARCH, LANGUAGES, KEPT
+- A filter bar above the grid: search across line, author and language;
+  a chip per language with counts; and a "Kept" chip that shows only
+  bookmarked entries, which until now were a dead end.
+- Accession numbers come from a quote's place in the whole archive, so
+  filtering never renumbers the plates (verified: filtering to English
+  leaves 001 / 002 / 007, not 001 / 002 / 003).
+- The empty state distinguishes "nothing under that heading" from
+  "nothing kept yet", and offers to clear the filters.
+
+THE LETTER CAN BE SKIPPED
+- The open is a ceremony the first time and a wait the tenth. Clicking
+  the letter drops straight to the end of it; every beat runs through
+  at()/over() so one flag collapses the whole sequence.
+
+PROVENANCE READS LIKE A PERSON
+- Every card used to carry the identical date, which was noise rather
+  than provenance. Now: KEPT TODAY / YESTERDAY / N DAYS AGO / LAST WEEK
+  / N WEEKS AGO, falling back to month and year past two months.
+
+THE ADD PAGE JOINS THE ARCHIVE
+- It was still in the old vocabulary - Bodoni masthead, gold gild-face
+  button, rounded-[26px] velvet panels - and read as a different site
+  next to the index. Form, fields and the "added this visit" plates are
+  now the archive's flat stock with jewel accents and the crimson
+  action. PageHeading.jsx deleted with its last caller.
+
+LEFT ALONE, DELIBERATELY
+- Bundle is 652 KB / 194 KB gzipped, mostly Framer Motion. Fine here.
+- The realtime WebSocket still fails from inside the preview pane.
+  REST reads and writes are healthy, so this needs one look in an
+  ordinary browser before it is treated as real.
+
+THE WORD IS "VERSE"
+- "Quote" only survived in one visible place - the crimson button - plus
+  four screen-reader labels; the interface had already drifted to its
+  own vocabulary. It is "verse" now throughout: Add a Verse, "Verse by
+  X" on the opened letter, "Delete verse by X", "Open the X verse", and
+  the edit field.
+- "Line" was the other word for the same thing ("the line matters more
+  than the spelling", "Search a line, a name, a language"). Both became
+  verse, so there is one word rather than two.
+- "Entry" is kept where it means the catalogue record rather than the
+  writing: "Withdraw this entry?" on the letter.
+- Code identifiers and the Supabase `quotes` table are unchanged -
+  renaming a live table for a vocabulary change is churn with no
+  user-visible benefit.
+
+=====================================================================
+14. POLISH ROUND  (my own call on what was worth doing)
+=====================================================================
+
+MOBILE, WHICH HAD NEVER BEEN CHECKED SINCE THE REDESIGN
+- No horizontal overflow, clean single column, the letter fits. Two
+  real faults found and fixed:
+  - The register subtitle was being cut mid-word ("ARCHIVUM PRIVATUM
+    · ..."). There is no room for it beside the action on a phone, so
+    it now waits for sm.
+  - Tap targets were 22-27px: the bookmark (22), the chips (25), see
+    translation (23), Edit/Delete on the letter (27), the card arrow
+    (28) and the wordmark (16 tall). All are >=30px on a phone now and
+    keep their tighter sizes from sm up. Verified: zero targets under
+    30px remain.
+
+THE LETTER HANDLES FOCUS
+- Opening a dialog left focus on the page behind it, and closing never
+  gave it back, so a keyboard user was stranded. Focus now moves into
+  the letter on open, Tab is trapped inside it, and focus returns to
+  whatever opened it on close. Verified: arrow -> dialog -> arrow.
+
+A FAILED WRITE NO LONGER DISAPPEARS SILENTLY
+- Every write was optimistic with a rollback and a console.error, so
+  from the outside a failed save looked like the app quietly ate your
+  verse. The store now carries the failure and a notice says which of
+  the three it was. Verified by forcing a 500 on the update: the
+  notice appeared, the value rolled back, the row was untouched.
+
+DEAD CSS
+- velvet-card, gild-border, sheen-sweep (and its keyframes) and
+  no-scrollbar had lost their last callers across the redesigns.
+  index.css 12.0 KB -> 10.9 KB of source. (Tailwind only emits used
+  utilities, so this is tidiness rather than payload.)

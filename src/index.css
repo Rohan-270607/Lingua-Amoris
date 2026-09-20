@@ -1,0 +1,365 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   VELVET & GILT
+   ------------------------------------------------------------------
+   A lit room, not a dark screen. The old archive was flat: every
+   surface sat within a couple of percent of black, so nothing could
+   catch light and nothing had depth. This system gives the page one
+   warm source above the centre, a plum-black velvet ground that falls
+   away into vignette, and gold that is bright enough to actually read
+   as gold. Garnet is the ceremonial accent; laurel classifies.
+
+   Token names carry over from the previous palettes, so every existing
+   utility inherits the new colour without being rewritten.
+   ------------------------------------------------------------------ */
+@theme {
+  /* Didone for the name and headings, garalde for anything you read at
+     length, and Comfortaa's soft geometry for tracked micro-labels. */
+  --font-title: "Bodoni Moda", "Cormorant Garamond", Didot, Georgia, serif;
+  --font-display: "Cormorant Garamond", "Noto Serif Devanagari", Georgia, serif;
+  --font-sans: "Comfortaa", ui-sans-serif, system-ui, sans-serif;
+
+  /* Ground — plum-black, warmer and deeper than the old soot umber */
+  --color-ink-950: #060405;
+  --color-ink-900: #0b0709;
+  --color-maroon-900: #150d11; /* raised surface */
+  --color-maroon-800: #1d1218; /* surface, hover base */
+  --color-maroon-700: #27171e; /* surface high */
+  --color-maroon-600: #33202a; /* surface highest */
+  --color-plum: #2a1220;
+
+  /* Laurel — the green at the base of a rose stem */
+  --color-wine-600: #1a2e1f;
+  --color-wine-500: #4c7a55;
+  --color-leaf: #8fbe97;
+
+  /* Garnet — saturated enough to glow instead of muddying */
+  --color-rose-deep: #4a0c1c;
+  --color-crimson: #a81e3c;
+  --color-ember: #d9584e;
+
+  /* Gilt — a real gold ramp, dark alloy through specular peak */
+  --color-gold: #8c6a23;
+  --color-petal: #c9a227;
+  --color-champagne: #e9c972;
+  --color-sheen: #fff6da;
+
+  /* Ink on velvet */
+  --color-rosedust: #bca894;
+  --color-blush: #efe3d3;
+  --color-ivory: #fbf5ec;
+
+  /* Depth. Three stacked falloffs read as real distance from the page;
+     a single blur reads as a sticker. */
+  --shadow-lift:
+    0 2px 4px rgba(0, 0, 0, 0.5), 0 14px 28px -8px rgba(0, 0, 0, 0.72),
+    0 40px 80px -28px rgba(0, 0, 0, 0.9);
+  --shadow-soft:
+    0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 18px -6px rgba(0, 0, 0, 0.6),
+    0 24px 48px -20px rgba(0, 0, 0, 0.75);
+  --shadow-gild: 0 0 0 1px rgba(201, 162, 39, 0.22), 0 16px 40px -16px rgba(168, 30, 60, 0.4);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-ink-950 font-sans text-blush antialiased;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgba(168, 30, 60, 0.9);
+    color: #fbf5ec;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font-family: inherit;
+    color: inherit;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: rgba(188, 168, 148, 0.45);
+  }
+
+  option {
+    background-color: var(--color-maroon-800);
+    color: var(--color-blush);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink-950);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #3a2a18;
+    border: 2px solid var(--color-ink-950);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gold);
+  }
+}
+
+/* ------------------------------------------------------------------
+   The room
+   ------------------------------------------------------------------ */
+
+/* One warm source above the centre, a garnet pool low-left and a laurel
+   whisper low-right, over plum-black velvet — then a hard vignette so
+   the corners fall away. Fixed, so the light stays put while you scroll
+   and the page reads as a lit space rather than a scrolling texture. */
+@utility bg-velvet {
+  background-color: #0a0809;
+  background-image:
+    radial-gradient(ellipse 85% 45% at 50% 0%, rgba(233, 201, 114, 0.05) 0%, transparent 62%),
+    radial-gradient(ellipse 55% 40% at 8% 100%, rgba(168, 30, 60, 0.045) 0%, transparent 68%),
+    linear-gradient(180deg, #100c0e 0%, #0a0809 52%, #0c090b 100%);
+  background-attachment: fixed;
+}
+
+/* A velvet nap: two fine diagonal weaves, almost invisible on their own,
+   that stop large surfaces from looking like flat fills. */
+@utility velvet-nap {
+  background-image:
+    repeating-linear-gradient(
+      115deg,
+      rgba(255, 246, 218, 0.014) 0px,
+      rgba(255, 246, 218, 0.014) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(
+      25deg,
+      rgba(0, 0, 0, 0.22) 0px,
+      rgba(0, 0, 0, 0.22) 2px,
+      transparent 2px,
+      transparent 7px
+    );
+}
+
+/* ------------------------------------------------------------------
+   Gilt
+   ------------------------------------------------------------------ */
+
+/* Gold leaf clipped to letterforms, lit from the upper left. */
+@utility gild-text {
+  background: linear-gradient(
+    145deg,
+    #8c6a23 0%,
+    #e9c972 26%,
+    #fff6da 46%,
+    #d9b24f 62%,
+    #8c6a23 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* A hairline that catches the light at its centre. */
+@utility gild-rule {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(140, 106, 35, 0.6) 18%,
+    #fff6da 50%,
+    rgba(201, 162, 39, 0.75) 82%,
+    transparent 100%
+  );
+}
+
+/* A struck gold face with dark ink on it — the one genuinely bright
+   thing on the page, so it always reads as the primary action. */
+@utility gild-face {
+  background-image: linear-gradient(
+    150deg,
+    #f2dfa0 0%,
+    #d7b055 22%,
+    #b98f33 48%,
+    #d8b459 74%,
+    #8c6a23 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 253, 240, 0.65),
+    inset 0 -1px 0 rgba(72, 50, 8, 0.6),
+    0 2px 6px rgba(0, 0, 0, 0.5),
+    0 14px 30px -10px rgba(201, 162, 39, 0.35);
+}
+
+/* ------------------------------------------------------------------
+   Light that moves
+   ------------------------------------------------------------------ */
+
+/* A slow swell in the overhead source. Long enough that you register it
+   as the room breathing rather than as an animation. */
+@keyframes lantern {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@utility lantern-glow {
+  animation: lantern 14s ease-in-out infinite;
+}
+
+/* A four-point glint on gold edges and jewellery. */
+@keyframes glint-breathe {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.18) rotate(90deg);
+    filter: drop-shadow(0 0 5px rgba(255, 246, 218, 0.9));
+  }
+}
+
+@utility jewel-sparkle {
+  animation: glint-breathe 4.5s ease-in-out infinite;
+}
+
+@utility jewel-sparkle-delayed {
+  animation: glint-breathe 5.8s ease-in-out infinite 2.2s;
+}
+
+/* Film grain over everything, so the black is cloth and not a fill. */
+@utility grain {
+  position: fixed;
+  inset: 0;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------------
+   Paper
+   ------------------------------------------------------------------ */
+
+/* The sheet inside the envelope: warm laid paper, lit from the top left,
+   with a fine fibre tooth. Deliberately the only light surface in the
+   whole site, so an opened letter reads as an event. */
+@utility paper-sheet {
+  background-color: #faf6ec;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(122, 100, 66, 0.028) 0px,
+      rgba(122, 100, 66, 0.028) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(122, 100, 66, 0.022) 0px,
+      rgba(122, 100, 66, 0.022) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    radial-gradient(ellipse 80% 60% at 18% 0%, rgba(255, 255, 255, 0.95) 0%, transparent 62%),
+    linear-gradient(176deg, #fdfaf3 0%, #f7f1e3 52%, #eee5d3 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* The vignettes are drawn for velvet, in gold and garnet. On paper they
+   take the letter's own ink instead. */
+.vg-paper svg * {
+  stroke: currentColor;
+}
+
+/* ------------------------------------------------------------------
+   Vignette motion. These live in CSS rather than Framer Motion: the
+   scenes animate SVG children, and Framer maps x/y onto SVG attributes
+   (which circles and groups don't have), so translation silently froze
+   at the first keyframe. CSS transforms on SVG need transform-box to
+   resolve percentage origins, hence the shared base class.
+   ------------------------------------------------------------------ */
+.vg {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes vg-twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+@keyframes vg-fall {
+  0% { opacity: 0; transform: translateY(0); }
+  15% { opacity: 0.9; }
+  85% { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(36px); }
+}
+@keyframes vg-drift {
+  0%, 100% { opacity: 0.5; transform: translateX(-16px); }
+  50% { opacity: 0.9; transform: translateX(16px); }
+}
+@keyframes vg-fly {
+  0% { opacity: 0; transform: translate(0, 0); }
+  15% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(150px, -22px); }
+}
+@keyframes vg-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2.5px); }
+}
+@keyframes vg-flicker {
+  0%, 100% { opacity: 0.75; transform: scale(1, 1); }
+  35% { opacity: 1; transform: scale(0.94, 1.14); }
+  70% { opacity: 0.8; transform: scale(1.04, 0.95); }
+}
+@keyframes vg-sway {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(4deg); }
+}
+@keyframes vg-rise {
+  0%, 100% { opacity: 0.25; transform: translateY(2px); }
+  50% { opacity: 0.85; transform: translateY(-6px); }
+}
+@keyframes vg-pulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.16); }
+}
+@keyframes vg-sunrise {
+  0%, 100% { opacity: 0.6; transform: translateY(2px); }
+  50% { opacity: 1; transform: translateY(-5px); }
+}
+@keyframes vg-ripple {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(7px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .vg,
+  .jewel-sparkle,
+  .jewel-sparkle-delayed,
+  .lantern-glow {
+    animation: none !important;
+  }
+}
