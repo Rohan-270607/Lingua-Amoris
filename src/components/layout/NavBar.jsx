@@ -29,7 +29,7 @@ export default function NavBar() {
           <span className="font-title block truncate text-[1rem] leading-none text-champagne italic transition-colors duration-300 group-hover:text-sheen sm:text-[1.15rem]">
             Lingua Amoris
           </span>
-          <span className="font-sans mt-1.5 hidden truncate text-[6px] font-medium tracking-[0.3em] text-rosedust/35 uppercase sm:block sm:text-[6.5px]">
+          <span className="font-sans mt-1.5 hidden truncate text-[9px] font-medium tracking-[0.3em] text-rosedust/35 uppercase sm:block sm:text-[9px]">
             Archivum Privatum &middot; Curated
           </span>
         </Link>
@@ -42,7 +42,7 @@ export default function NavBar() {
                 <NavLink
                   to={link.to}
                   end={link.end}
-                  className="group relative block px-2.5 py-2 font-sans text-[7.5px] font-medium tracking-[0.26em] uppercase outline-none focus-visible:ring-1 focus-visible:ring-champagne"
+                  className="group relative block px-2.5 py-2 font-sans text-[10px] font-medium tracking-[0.26em] uppercase outline-none focus-visible:ring-1 focus-visible:ring-champagne"
                 >
                   {({ isActive }) => (
                     <>
@@ -71,7 +71,7 @@ export default function NavBar() {
           {/* The one action */}
           <Link
             to="/add"
-            className="font-sans flex items-center gap-1.5 rounded-full border border-crimson/60 bg-crimson px-3.5 py-2.5 text-[7px] font-semibold tracking-[0.22em] whitespace-nowrap text-ivory uppercase shadow-[0_6px_18px_-8px_rgba(168,30,60,0.9)] transition-colors duration-300 hover:bg-[#bd2544] sm:px-4 sm:text-[7.5px]"
+            className="font-sans flex items-center gap-1.5 rounded-full border border-crimson/60 bg-crimson px-3.5 py-2.5 text-[9.5px] font-semibold tracking-[0.22em] whitespace-nowrap text-ivory uppercase shadow-[0_6px_18px_-8px_rgba(168,30,60,0.9)] transition-colors duration-300 hover:bg-[#bd2544] sm:px-4 sm:text-[10px]"
           >
             <DiamondIcon className="h-2 w-2" />
             Add a Verse
@@ -80,7 +80,7 @@ export default function NavBar() {
           {/* Curator's medallion */}
           <span
             aria-hidden="true"
-            className="font-sans grid h-7 w-7 shrink-0 place-items-center rounded-full border border-[#3a2a30] bg-[#241a1e] text-[7.5px] font-semibold text-rosedust/70"
+            className="font-sans grid h-7 w-7 shrink-0 place-items-center rounded-full border border-[#3a2a30] bg-[#241a1e] text-[10px] font-semibold text-rosedust/70"
           >
             LA
           </span>

@@ -108,3 +108,23 @@ export function accentFor(language) {
 export function accentForQuote(quote) {
   return accentAt(JEWELS[hashOf(quote?.id || quote?.language) % JEWELS.length])
 }
+
+/**
+ * One spelling per language. "hindi" and "Hindi" were being counted as two
+ * languages — two chips, split counts — because grouping compared the raw
+ * strings people typed.
+ */
+export function canonicalLanguage(name) {
+  const cleaned = String(name ?? '').trim().replace(/\s+/g, ' ')
+  if (!cleaned) return cleaned
+  const known = LANGUAGES.find((l) => l.toLowerCase() === cleaned.toLowerCase())
+  if (known) return known
+  // A language not on the list: keep deliberate mixed case, but give an
+  // all-lower or all-upper entry ordinary capitals.
+  if (cleaned === cleaned.toLowerCase() || cleaned === cleaned.toUpperCase()) {
+    return cleaned
+      .toLowerCase()
+      .replace(/(^|[\s/-])(\p{L})/gu, (_, sep, ch) => sep + ch.toUpperCase())
+  }
+  return cleaned
+}

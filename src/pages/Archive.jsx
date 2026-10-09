@@ -35,7 +35,7 @@ function Chip({ children, active, onClick }) {
       onClick={onClick}
       aria-pressed={active}
       className={
-        'font-sans rounded-full border px-3.5 py-2.5 text-[7.5px] font-medium tracking-[0.2em] whitespace-nowrap uppercase transition-colors duration-300 outline-none focus-visible:ring-1 focus-visible:ring-champagne sm:py-1.5 ' +
+        'font-sans rounded-full border px-3.5 py-2.5 text-[10px] font-medium tracking-[0.2em] whitespace-nowrap uppercase transition-colors duration-300 outline-none focus-visible:ring-1 focus-visible:ring-champagne sm:py-1.5 ' +
         (active
           ? 'border-crimson bg-crimson text-ivory'
           : 'border-[#332a2e] text-rosedust/55 hover:border-[#4a3c42] hover:text-blush')
@@ -61,7 +61,8 @@ function CodexIcon(props) {
  * away. Reached by swiping up off the cover at "/".
  */
 export default function Archive() {
-  const { quotes, languages, loading, deleteQuote, updateQuote } = useQuotes()
+  const { quotes, languages, loading, loadError, retryLoad, deleteQuote, updateQuote } =
+    useQuotes()
 
   const [showTranslation, setShowTranslation] = useState(false)
   const [query, setQuery] = useState('')
@@ -127,7 +128,7 @@ export default function Archive() {
           type="button"
           onClick={() => setShowTranslation((v) => !v)}
           aria-expanded={showTranslation}
-          className="font-sans mt-5 rounded-full border border-[#2e2529] px-3.5 py-2.5 text-[6.5px] sm:py-1.5 font-medium tracking-[0.26em] text-rosedust/45 uppercase transition-colors duration-300 outline-none hover:border-[#463940] hover:text-champagne focus-visible:ring-1 focus-visible:ring-champagne"
+          className="font-sans mt-5 rounded-full border border-[#2e2529] px-3.5 py-2.5 text-[9px] sm:py-1.5 font-medium tracking-[0.26em] text-rosedust/45 uppercase transition-colors duration-300 outline-none hover:border-[#463940] hover:text-champagne focus-visible:ring-1 focus-visible:ring-champagne"
         >
           {showTranslation ? 'Hide translation' : 'See translation'}
         </button>
@@ -145,7 +146,7 @@ export default function Archive() {
               <p className="font-display mt-5 max-w-lg text-[0.95rem] leading-relaxed text-rosedust/65 italic">
                 &ldquo;{EPIGRAPH_TRANSLATION}&rdquo;
               </p>
-              <p className="font-sans mt-2.5 text-[6.5px] tracking-[0.26em] text-rosedust/35 uppercase">
+              <p className="font-sans mt-2.5 text-[9px] tracking-[0.26em] text-rosedust/35 uppercase">
                 &mdash; {EPIGRAPH_SOURCE}
               </p>
             </motion.div>
@@ -169,7 +170,7 @@ export default function Archive() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search a verse, a name, a language…"
-              className="font-sans w-full rounded-full border border-[#2b2327] bg-[#181416] py-2.5 pr-9 pl-10 text-[10px] tracking-[0.12em] text-blush outline-none transition-colors duration-300 placeholder:text-rosedust/30 hover:border-[#3a3035] focus:border-petal/50"
+              className="font-sans w-full rounded-full border border-[#2b2327] bg-[#181416] py-2.5 pr-9 pl-10 text-[11.5px] tracking-[0.12em] text-blush outline-none transition-colors duration-300 placeholder:text-rosedust/30 hover:border-[#3a3035] focus:border-petal/50"
             />
             {query && (
               <button
@@ -206,13 +207,33 @@ export default function Archive() {
       )}
 
       {/* ----------------------------------------------------- grid ---- */}
-      {loading ? (
-        <p className="font-sans py-16 text-center text-[9px] tracking-[0.3em] text-rosedust/40 uppercase">
+      {loadError ? (
+        <div role="alert" className="flex flex-col items-center py-16 text-center">
+          <p className="font-display text-[1.3rem] text-blush italic">
+            The archive can&rsquo;t be reached just now.
+          </p>
+          <p className="font-sans mt-3 text-[11px] tracking-[0.22em] text-rosedust/60 uppercase">
+            Your verses are safe &mdash; nothing has been deleted.
+          </p>
+          <button
+            type="button"
+            onClick={retryLoad}
+            className="font-sans mt-7 rounded-full border border-crimson/60 bg-crimson px-5 py-2.5 text-[10px] font-semibold tracking-[0.22em] text-ivory uppercase transition-colors duration-300 hover:bg-[#bd2544]"
+          >
+            Try again
+          </button>
+          <p className="font-sans mt-6 max-w-xs text-[9.5px] leading-relaxed tracking-[0.14em] text-rosedust/35 uppercase">
+            If it stays this way, the database may have been paused for
+            inactivity and needs restoring in Supabase.
+          </p>
+        </div>
+      ) : loading ? (
+        <p className="font-sans py-16 text-center text-[11px] tracking-[0.3em] text-rosedust/40 uppercase">
           Retrieving the folios…
         </p>
       ) : visible.length === 0 ? (
         <div className="py-16 text-center">
-          <p className="font-sans text-[9px] tracking-[0.3em] text-rosedust/40 uppercase">
+          <p className="font-sans text-[11px] tracking-[0.3em] text-rosedust/40 uppercase">
             {filtering ? 'Nothing under that heading' : 'Nothing kept yet'}
           </p>
           {filtering && (
@@ -223,7 +244,7 @@ export default function Archive() {
                 setLanguage('All')
                 setOnlyKept(false)
               }}
-              className="font-sans mt-4 text-[9px] tracking-[0.24em] text-petal/70 uppercase transition-colors duration-300 hover:text-champagne"
+              className="font-sans mt-4 text-[11px] tracking-[0.24em] text-petal/70 uppercase transition-colors duration-300 hover:text-champagne"
             >
               Clear the filters
             </button>

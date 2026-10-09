@@ -45,7 +45,7 @@ export default function RootLayout() {
         {/* Title strip */}
         <div className="relative flex h-9 shrink-0 items-center border-b border-[#1a1618] px-4">
           <CodexGlyph className="h-3.5 w-3.5 text-rosedust/50" />
-          <span className="font-sans absolute inset-x-0 text-center text-[8px] font-medium tracking-[0.2em] text-rosedust/55 sm:text-[9px]">
+          <span className="font-sans absolute inset-x-0 text-center text-[10px] font-medium tracking-[0.2em] text-rosedust/55 sm:text-[11px]">
             Lingua Amoris &mdash; Curated Archive Collection
           </span>
         </div>
@@ -94,7 +94,7 @@ function WriteFailureNotice() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 16 }}
           transition={{ type: 'spring', stiffness: 340, damping: 28 }}
-          className="font-sans fixed inset-x-0 bottom-8 z-[120] mx-auto flex w-fit max-w-[92vw] items-center gap-4 rounded-full border border-crimson/50 bg-[#1d1218] px-5 py-3 text-[8.5px] font-medium tracking-[0.18em] text-blush uppercase shadow-[0_18px_44px_-18px_rgba(0,0,0,0.95)]"
+          className="font-sans fixed inset-x-0 bottom-8 z-[120] mx-auto flex w-fit max-w-[92vw] items-center gap-4 rounded-full border border-crimson/50 bg-[#1d1218] px-5 py-3 text-[10.5px] font-medium tracking-[0.18em] text-blush uppercase shadow-[0_18px_44px_-18px_rgba(0,0,0,0.95)]"
         >
           <span>{writeError}</span>
           <button

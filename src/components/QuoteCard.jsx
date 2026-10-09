@@ -50,7 +50,7 @@ export default function QuoteCard({ quote, onDelete }) {
     >
       <header className="flex items-center gap-2.5">
         <span
-          className="font-sans shrink-0 rounded-[4px] border px-2 py-[3px] text-[7px] font-medium tracking-[0.16em] whitespace-nowrap uppercase"
+          className="font-sans shrink-0 rounded-[4px] border px-2 py-[3px] text-[9.5px] font-medium tracking-[0.16em] whitespace-nowrap uppercase"
           style={{
             color: accent.text,
             backgroundImage: accent.face,
@@ -71,20 +71,20 @@ export default function QuoteCard({ quote, onDelete }) {
               transition={{ duration: 0.22, ease: EASE_OUT }}
               className="ml-auto flex items-center gap-2"
             >
-              <span className="font-sans text-[7px] tracking-[0.18em] text-rosedust/55 uppercase">
+              <span className="font-sans text-[9.5px] tracking-[0.18em] text-rosedust/55 uppercase">
                 Sure?
               </span>
               <button
                 type="button"
                 onClick={() => onDelete(quote.id)}
-                className="font-sans rounded-full border border-crimson/70 px-2.5 py-1 text-[7px] font-medium tracking-[0.18em] text-ember uppercase transition-colors duration-300 hover:bg-crimson hover:text-ivory"
+                className="font-sans rounded-full border border-crimson/70 px-2.5 py-1 text-[9.5px] font-medium tracking-[0.18em] text-ember uppercase transition-colors duration-300 hover:bg-crimson hover:text-ivory"
               >
                 Yes
               </button>
               <button
                 type="button"
                 onClick={() => setConfirming(false)}
-                className="font-sans rounded-full border border-[#3a3035] px-2.5 py-1 text-[7px] font-medium tracking-[0.18em] text-rosedust/60 uppercase transition-colors duration-300 hover:text-blush"
+                className="font-sans rounded-full border border-[#3a3035] px-2.5 py-1 text-[9.5px] font-medium tracking-[0.18em] text-rosedust/60 uppercase transition-colors duration-300 hover:text-blush"
               >
                 No
               </button>
@@ -119,7 +119,7 @@ export default function QuoteCard({ quote, onDelete }) {
 
       <footer className="mt-5 flex items-center gap-2.5">
         <span
-          className="font-sans grid h-7 w-7 shrink-0 place-items-center rounded-full border text-[8px] font-semibold"
+          className="font-sans grid h-7 w-7 shrink-0 place-items-center rounded-full border text-[10px] font-semibold"
           style={{
             color: accent.text,
             backgroundImage: accent.face,

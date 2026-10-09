@@ -58,7 +58,7 @@ export default function ArchiveCard({ quote, index, bookmarked, onToggleBookmark
       {/* Register: accession tag, language, and the open affordance */}
       <header className="flex items-center gap-2.5">
         <span
-          className="font-sans shrink-0 rounded-[4px] border px-2 py-[3px] text-[7px] font-medium tracking-[0.16em] whitespace-nowrap uppercase"
+          className="font-sans shrink-0 rounded-[4px] border px-2 py-[3px] text-[9.5px] font-medium tracking-[0.16em] whitespace-nowrap uppercase"
           style={{
             color: accent.text,
             backgroundImage: accent.face,
@@ -68,7 +68,7 @@ export default function ArchiveCard({ quote, index, bookmarked, onToggleBookmark
         >
           {folioRef(quote.language, index)}
         </span>
-        <span className="font-sans truncate text-[7.5px] font-medium tracking-[0.22em] text-rosedust/45 uppercase">
+        <span className="font-sans truncate text-[10px] font-medium tracking-[0.22em] text-rosedust/45 uppercase">
           {quote.language}
         </span>
         <button
@@ -100,7 +100,7 @@ export default function ArchiveCard({ quote, index, bookmarked, onToggleBookmark
       {/* Attribution */}
       <footer className="mt-5 flex items-end gap-2.5">
         <span
-          className="font-sans grid h-7 w-7 shrink-0 place-items-center rounded-full border text-[8px] font-semibold tracking-[0.04em]"
+          className="font-sans grid h-7 w-7 shrink-0 place-items-center rounded-full border text-[10px] font-semibold tracking-[0.04em]"
           style={{
             color: accent.text,
             backgroundImage: accent.face,
@@ -115,7 +115,7 @@ export default function ArchiveCard({ quote, index, bookmarked, onToggleBookmark
           <p className="font-display truncate text-[0.95rem] leading-tight text-ivory">
             {quote.author || 'Anonymous'}
           </p>
-          <p className="font-sans mt-0.5 truncate text-[6.5px] tracking-[0.2em] text-rosedust/35 uppercase">
+          <p className="font-sans mt-0.5 truncate text-[9px] tracking-[0.2em] text-rosedust/35 uppercase">
             {provenance(quote.createdAt)}
           </p>
         </div>

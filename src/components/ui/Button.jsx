@@ -6,7 +6,7 @@ const MotionLink = motion.create(Link)
 
 const base =
   'group/btn relative inline-flex shrink-0 items-center justify-center gap-2.5 overflow-hidden ' +
-  'rounded-full px-8 py-3.5 font-sans text-[10.5px] font-semibold tracking-[0.28em] uppercase ' +
+  'rounded-full px-8 py-3.5 font-sans text-[12px] font-semibold tracking-[0.28em] uppercase ' +
   'outline-none transition-[box-shadow,background-color,border-color,color,filter] duration-500 ease-out ' +
   'focus-visible:ring-2 focus-visible:ring-champagne/70 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950'
 

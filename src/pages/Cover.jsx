@@ -155,7 +155,7 @@ export default function Cover() {
           >
             <ChevronUp className="h-4 w-4" />
           </motion.span>
-          <span className="text-[7.5px] font-medium tracking-[0.34em] uppercase">
+          <span className="text-[10px] font-medium tracking-[0.34em] uppercase">
             Swipe up to open
           </span>
         </motion.button>

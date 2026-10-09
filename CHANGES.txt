@@ -508,3 +508,50 @@ Found while reading supabase-setup.sql before deploying.
   delete all ask for the affected row back with .select(), and treat
   "no rows came back" as a failure - rollback plus the notice - rather
   than as success. Security advisor clean afterwards.
+
+=====================================================================
+16. "ALL MY SAVED VERSES ARE GONE"
+=====================================================================
+Not data loss. The free Supabase tier pauses a project after about a
+week without activity. A paused project answers with HTTP 521, the
+app's load failed, and a failed load left the list empty - which reads
+exactly like "nothing has been kept". Restored the project from the
+dashboard side (about 90 seconds); all seven rows were intact.
+
+- Unreachable is now its own state, never an empty one. If the load
+  fails, the archive says so ("can't be reached just now - your verses
+  are safe, nothing has been deleted"), offers Try again, and names the
+  likeliest cause (a paused database). Verified by pointing a dev build
+  at an address that cannot resolve.
+- retryLoad re-runs the fetch and the realtime subscription together.
+
+=====================================================================
+17. POLISH
+=====================================================================
+READABILITY
+- The micro-labels were sized from a reference screenshot that had been
+  scaled to roughly 40%, so at real size they landed at 6-7.5px. The
+  whole ladder is lifted, order kept so the hierarchy survives
+  (6 -> 9, 8 -> 10, 9 -> 11, 10 -> 11.5, 11 -> 12.5). The floor is now
+  9px; measured on the page.
+
+LANGUAGES
+- "hindi" and "Hindi" counted as two languages: two chips, split
+  counts. Grouping compared raw strings. canonicalLanguage() gives one
+  spelling per language - the known list matched case-insensitively,
+  anything else capitalised if it was all-lower or all-upper - applied
+  on the way in (add and edit) and on the way out (existing rows), so
+  old entries merge without being rewritten.
+
+LIVE
+- Someone else's edit now arrives live, the way their adds and deletes
+  already did (realtime UPDATE handler).
+
+TOUCH
+- Inputs and selects are 16px under 640px wide; iOS Safari otherwise
+  zooms the page in on focus and does not zoom back out.
+- The Ctrl+Enter hint is hidden on touch devices, where it is noise.
+
+FAVICON
+- Re-drawn in the current palette (gold heart on near-black) instead of
+  the first theme's colours.

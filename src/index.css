@@ -363,3 +363,13 @@
     animation: none !important;
   }
 }
+
+/* iOS Safari zooms the page into any field set under 16px the moment it
+   is focused, and does not zoom back out. Unlayered on purpose, so it
+   outranks the utility classes on those fields. */
+@media (max-width: 639px) {
+  input,
+  select {
+    font-size: 16px;
+  }
+}

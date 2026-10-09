@@ -13,7 +13,7 @@ export default function NotFound() {
     >
       <motion.p
         variants={staggerChild}
-        className="font-sans mb-8 text-[9.5px] font-medium tracking-[0.46em] text-champagne/60 uppercase"
+        className="font-sans mb-8 text-[11px] font-medium tracking-[0.46em] text-champagne/60 uppercase"
       >
         Nothing here
       </motion.p>

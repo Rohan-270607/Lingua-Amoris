@@ -104,7 +104,7 @@ function PaperButton({ children, accent, solid, danger, onClick }) {
       type="button"
       onClick={onClick}
       className={
-        'font-sans rounded-full border px-4 py-2.5 text-[9px] font-medium tracking-[0.22em] uppercase transition-opacity duration-300 outline-none hover:opacity-75 sm:py-1.5 ' +
+        'font-sans rounded-full border px-4 py-2.5 text-[11px] font-medium tracking-[0.22em] uppercase transition-opacity duration-300 outline-none hover:opacity-75 sm:py-1.5 ' +
         (solid ? 'text-[#faf6ec]' : '')
       }
       style={
@@ -353,7 +353,7 @@ export default function SealedLetter({ quote, onClose, onDelete, onUpdate }) {
             }}
           />
           <p
-            className="font-sans mt-4 text-[8px] font-medium tracking-[0.34em] uppercase opacity-60"
+            className="font-sans mt-4 text-[10px] font-medium tracking-[0.34em] uppercase opacity-60"
             style={{ color: accent.text }}
           >
             {quote.language}
@@ -427,13 +427,13 @@ export default function SealedLetter({ quote, onClose, onDelete, onUpdate }) {
                     onChange={(e) => setDraft({ ...draft, author: e.target.value })}
                     placeholder="Author — optional"
                     aria-label="Author"
-                    className="font-sans min-w-0 flex-1 rounded-full border bg-[rgba(255,255,255,0.45)] px-3.5 py-1.5 text-[10px] tracking-[0.18em] uppercase outline-none"
+                    className="font-sans min-w-0 flex-1 rounded-full border bg-[rgba(255,255,255,0.45)] px-3.5 py-1.5 text-[11.5px] tracking-[0.18em] uppercase outline-none"
                     style={{ color: accent.ink, borderColor: accent.inkSoft }}
                   />
                 ) : (
                   <motion.cite
                     {...reveal(BEAT.author)}
-                    className="font-sans text-[10px] tracking-[0.24em] uppercase not-italic"
+                    className="font-sans text-[11.5px] tracking-[0.24em] uppercase not-italic"
                     style={{ color: accent.inkSoft }}
                   >
                     {quote.author ? '— ' + quote.author : '— Anonymous'}
@@ -446,13 +446,13 @@ export default function SealedLetter({ quote, onClose, onDelete, onUpdate }) {
                       value={draft.language}
                       onChange={(e) => setDraft({ ...draft, language: e.target.value })}
                       aria-label="Language"
-                      className="font-sans w-32 rounded-full border bg-[rgba(255,255,255,0.45)] px-3.5 py-1.5 text-[9px] font-medium tracking-[0.24em] uppercase outline-none"
+                      className="font-sans w-32 rounded-full border bg-[rgba(255,255,255,0.45)] px-3.5 py-1.5 text-[11px] font-medium tracking-[0.24em] uppercase outline-none"
                       style={{ color: accent.ink, borderColor: accent.inkSoft }}
                     />
                   ) : (
                     <motion.span
                       {...reveal(BEAT.stamp)}
-                      className="font-sans rounded-full border px-3.5 py-1.5 text-[9px] font-medium tracking-[0.24em] uppercase"
+                      className="font-sans rounded-full border px-3.5 py-1.5 text-[11px] font-medium tracking-[0.24em] uppercase"
                       style={{ color: accent.ink, borderColor: accent.inkSoft }}
                     >
                       {quote.language}
@@ -479,7 +479,7 @@ export default function SealedLetter({ quote, onClose, onDelete, onUpdate }) {
                 ) : confirmingDelete ? (
                   <>
                     <span
-                      className="font-sans mr-auto text-[9px] tracking-[0.22em] uppercase"
+                      className="font-sans mr-auto text-[11px] tracking-[0.22em] uppercase"
                       style={{ color: accent.inkSoft }}
                     >
                       Withdraw this entry?

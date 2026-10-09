@@ -11,7 +11,7 @@ const FIELD = '#120f11'
 const EDGE = '#2b2327'
 
 const fieldBase =
-  'font-sans w-full rounded-[8px] border bg-[#120f11] px-4 py-2.5 text-[11px] tracking-[0.08em] text-blush ' +
+  'font-sans w-full rounded-[8px] border bg-[#120f11] px-4 py-2.5 text-[12.5px] tracking-[0.08em] text-blush ' +
   'outline-none transition-colors duration-300 placeholder:text-rosedust/30 ' +
   'hover:border-[#3a3035] focus:border-petal/50'
 
@@ -190,8 +190,8 @@ export default function QuoteForm({ onAdd }) {
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.28, ease: EASE_OUT }}
               className={
-                'font-sans text-[7.5px] font-medium tracking-[0.24em] uppercase ' +
-                (justSaved ? 'text-champagne' : 'text-rosedust/35')
+                'font-sans text-[10px] font-medium tracking-[0.24em] uppercase ' +
+                (justSaved ? 'text-champagne' : 'text-rosedust/35 pointer-coarse:invisible')
               }
             >
               {justSaved ? 'Kept' : 'Ctrl + Enter to save'}
@@ -203,7 +203,7 @@ export default function QuoteForm({ onAdd }) {
             whileHover={{ y: -1 }}
             whileTap={{ scale: 0.98, y: 0 }}
             transition={{ type: 'spring', stiffness: 420, damping: 26 }}
-            className="font-sans shrink-0 rounded-full border border-crimson/60 bg-crimson px-6 py-2.5 text-[7.5px] font-semibold tracking-[0.22em] text-ivory uppercase shadow-[0_6px_18px_-8px_rgba(168,30,60,0.9)] transition-colors duration-300 hover:bg-[#bd2544]"
+            className="font-sans shrink-0 rounded-full border border-crimson/60 bg-crimson px-6 py-2.5 text-[10px] font-semibold tracking-[0.22em] text-ivory uppercase shadow-[0_6px_18px_-8px_rgba(168,30,60,0.9)] transition-colors duration-300 hover:bg-[#bd2544]"
           >
             Keep it
           </motion.button>

@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { canonicalLanguage } from '../lib/languages'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 
@@ -84,21 +85,39 @@ function useQuotesStore() {
   const [localRaw, setLocalRaw] = useLocalStorage(STORAGE_KEY, SEED_QUOTES)
   const [sharedQuotes, setSharedQuotes] = useState([])
   const [loading, setLoading] = useState(isSupabaseConfigured)
+  // A failed load used to leave the list empty, and an empty list reads as
+  // "nothing kept yet" — which is how a paused database looked like every
+  // verse had been deleted. Unreachable is its own state now.
+  const [loadError, setLoadError] = useState(null)
+  const [attempt, setAttempt] = useState(0)
+
+  const retryLoad = useCallback(() => {
+    setLoadError(null)
+    setLoading(true)
+    setAttempt((n) => n + 1)
+  }, [])
 
   useEffect(() => {
     if (!isSupabaseConfigured) return
 
     let cancelled = false
 
-    supabase
-      .from('quotes')
-      .select('*')
-      .order('created_at', { ascending: false })
+    Promise.resolve(
+      supabase.from('quotes').select('*').order('created_at', { ascending: false }),
+    )
       .then(({ data, error }) => {
         if (cancelled) return
-        if (error) console.error('Failed to load shared quotes:', error)
-        else setSharedQuotes(data.map(rowToQuote))
-        setLoading(false)
+        if (error) throw error
+        setLoadError(null)
+        setSharedQuotes(data.map(rowToQuote))
+      })
+      .catch((error) => {
+        if (cancelled) return
+        console.error('Failed to load shared verses:', error)
+        setLoadError(String(error?.message || error))
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
       })
 
     const channel = supabase
@@ -119,19 +138,31 @@ function useQuotesStore() {
           setSharedQuotes((prev) => prev.filter((q) => q.id !== row.id))
         },
       )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'quotes' },
+        ({ new: row }) => {
+          setSharedQuotes((prev) => prev.map((q) => (q.id === row.id ? rowToQuote(row) : q)))
+        },
+      )
       .subscribe()
 
     return () => {
       cancelled = true
       supabase.removeChannel(channel)
     }
-  }, [])
+  }, [attempt])
 
   const [writeError, setWriteError] = useState(null)
 
   const addQuote = useCallback(
     (draft) => {
-      const quote = { ...draft, id: newId(), createdAt: Date.now() }
+      const quote = {
+        ...draft,
+        language: canonicalLanguage(draft.language),
+        id: newId(),
+        createdAt: Date.now(),
+      }
 
       if (!isSupabaseConfigured) {
         setLocalRaw((prev) => [quote, ...prev])
@@ -183,7 +214,7 @@ function useQuotesStore() {
       const fields = {
         text: patch.text,
         author: patch.author,
-        language: patch.language,
+        language: canonicalLanguage(patch.language),
       }
 
       if (!isSupabaseConfigured) {
@@ -226,6 +257,8 @@ function useQuotesStore() {
     updateQuote,
     writeError,
     dismissWriteError: useCallback(() => setWriteError(null), []),
+    loadError,
+    retryLoad,
   }
 }
 
@@ -242,11 +275,16 @@ export function QuotesProvider({ children }) {
     updateQuote,
     writeError,
     dismissWriteError,
+    loadError,
+    retryLoad,
   } = useQuotesStore()
 
   // Newest first, always — regardless of how the list arrived.
   const quotes = useMemo(
-    () => [...rawQuotes].sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0)),
+    () =>
+      rawQuotes
+        .map((q) => ({ ...q, language: canonicalLanguage(q.language) }))
+        .sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0)),
     [rawQuotes],
   )
 
@@ -272,8 +310,21 @@ export function QuotesProvider({ children }) {
       updateQuote,
       writeError,
       dismissWriteError,
+      loadError,
+      retryLoad,
     }),
-    [quotes, languages, loading, addQuote, deleteQuote, updateQuote, writeError, dismissWriteError],
+    [
+      quotes,
+      languages,
+      loading,
+      addQuote,
+      deleteQuote,
+      updateQuote,
+      writeError,
+      dismissWriteError,
+      loadError,
+      retryLoad,
+    ],
   )
 
   return <QuotesContext.Provider value={value}>{children}</QuotesContext.Provider>
