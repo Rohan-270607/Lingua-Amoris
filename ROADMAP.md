@@ -148,11 +148,11 @@ Goal: the existing app on a `v2` branch, with tests, lint and the audit all runn
   - Accept: The workflow file exists and its commands match the root scripts.
   - Verify: manual: the latest Actions run is green
   - Evidence: Workflow `.github/workflows/ci.yml` runs `npm ci`, `npm run lint`, `npm test`, `npm run build`, `node scripts/audit.mjs --check` on every push, no Supabase keys. GitHub Actions run for commit 1db514c on branch v2: completed, success, https://github.com/Rohan-270607/Lingua-Amoris/actions/runs/43585526396
-- [ ] **P0-T4** (smart) Map the existing app
+- [x] **P0-T4** (smart) Map the existing app
   - Do: Read the whole codebase. Write `docs/current-state.md`: the screens, the components, the store and its two modes, the exact shape of a row in Supabase and of the data in localStorage, the row-level policies, and any bugs found. List every task in this roadmap that clashes with what exists.
   - Accept: The document exists, and each clash has a Change request.
   - Verify: manual: docs/current-state.md exists and Change requests are filed
-  - Evidence:
+  - Evidence: `docs/current-state.md` written from a full read of src/, the SQL, index.html and vercel.json (screens, components, both data shapes, policies, build-time mode switch, 8 bugs). Five clashes filed as CR-001 to CR-005 in the Change requests list below; CR-001, CR-002 and CR-004 affect Phase 1 and need a human decision before those tasks.
 - [ ] **P0-T5** Safety net
   - Do: Add tests that pin down how add, view, edit and delete work today in both modes (local, and shared with a mocked Supabase client). Add an "export my verses" control that downloads every loaded verse and the bookmarks as JSON.
   - Accept: The tests pass on the unchanged app, an exported file re-imports to identical data in a test, and a real export of the live verses is saved outside the repo with its verse count written in Evidence.
@@ -313,12 +313,17 @@ Format: `D-00N | date | decision | why | alternatives rejected`
 
 Format: `CR-00N | date | task | what is wrong with the spec | proposed change | status`
 
-(none yet)
+- CR-001 | 2026-11-14 | P0-T5, P1-T1, P1-T3 | The app's local mode ships five built-in real quotations (`seed-*` in `QuotesContext.jsx`). Section 1 says there is no built-in library and rule 3 says test data must not be real quotations. | Leave the seeds in the app. Treat them as ordinary rows in migration (never dropped), and write every fixture from invented everyday phrases. | open
+- CR-002 | 2026-11-14 | P1-T1 | Ids in local data are not always UUIDs (`seed-*`, `q-…`), while the shared table's `id` is a `uuid`. A zod schema that requires a UUID would reject real data. Also `createdAt` is milliseconds in the app and `created_at` is a timestamp in the table, and the app picks direction from the language name, not the text. | The schema accepts any non-empty string id, keeps ids unchanged, stores the created date as milliseconds, and direction is derived by one function from the text and the language. | open
+- CR-003 | 2026-11-14 | P1-T2 | `supabase-setup.sql` cannot be run twice (policies and the realtime publication fail on a second run), so "a fresh project matches" cannot be tested by re-running it. | Make the setup file re-runnable (`drop policy if exists`, guarded publication add) as part of P1-T2. | open
+- CR-004 | 2026-11-14 | P1-T3 | "Mirror every successful load into IndexedDB" is incomplete. The app also receives live inserts, updates and deletes, and deletes never roll back. A mirror that only takes full loads would bring deleted verses back when offline. Bookmarks are never pruned either, so migrating them as favourites would carry ids of verses that no longer exist. | The mirror is replaced as a whole on each successful load and also applies live events; it is never a source of writes. Favourites for ids with no verse are kept but not counted or shown. | open
+- CR-005 | 2026-11-14 | P3-T4 | Offline "opens and shows my verses" is not enough: the display fonts (Bodoni Moda, Cormorant Garamond, Comfortaa) come from the Google Fonts CDN, so offline the look would silently change. | Cache those font files at run time in the service worker (no new dependency), and add "the display fonts still render offline" to the Accept line. | open
 
 ## Session notes
 
 Newest first. One short entry per working session: what was done, what is next, anything surprising.
 
+- 2026-11-14 | P0-T4 done: current-state.md written, CR-001..005 filed. Surprise: local mode ships five real quotations; Vitest would read the live .env, so P0-T5 must blank the Supabase variables for tests. Next: P0-T5.
 - 2026-11-14 | P0-T3 done: CI workflow added; pushed branch v2 (not main) and the run is green. Next: P0-T4 (read the whole app and write docs/current-state.md).
 - 2026-11-14 | P0-T2 done: hook confirmed firing from the report timestamp; audit scratch files git-ignored. Next: P0-T3.
 - 2026-11-14 | P0-T1 done: created `v2` from `main` (includes the unpushed polish commit), copied the kit in, added eslint 9 + vitest/jsdom/Testing Library, scripts `lint` and `test`, one smoke test. Three lint rules relaxed (see Evidence). Surprise: ESLint 10 is not supported by eslint-plugin-react. Next: P0-T2.
