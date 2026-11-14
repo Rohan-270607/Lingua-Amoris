@@ -143,7 +143,7 @@ Goal: the existing app on a `v2` branch, with tests, lint and the audit all runn
   - Accept: `node scripts/audit.mjs --check` prints PASS, and Evidence quotes the time from a report the hook wrote.
   - Verify: `node scripts/audit.mjs --check`
   - Evidence: The Stop hook fired on its own at the end of the P0-T1 turn: `.audit/last-report.md` says `Time: 2026-11-14T10:22:54Z`, 14 s after commit 4402380 (`10:22:40Z`), with no manual audit run in between. `node scripts/audit.mjs --check` prints `AUDIT PASS`. `.audit/state.json` and `.audit/last-report.md` are in .gitignore and no longer show in `git status`.
-- [ ] **P0-T3** Continuous integration
+- [~] **P0-T3** Continuous integration
   - Do: A GitHub Actions workflow runs lint, tests, build and `node scripts/audit.mjs --check` on every push. It needs no Supabase keys.
   - Accept: The workflow file exists and its commands match the root scripts.
   - Verify: manual: the latest Actions run is green

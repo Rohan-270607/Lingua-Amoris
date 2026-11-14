@@ -1,0 +1,21 @@
+name: CI
+
+# Runs the same commands as the root scripts, so a green run here means
+# the same thing as a green run on a laptop. No Supabase keys are needed:
+# without them the app builds in its local-only mode.
+on: [push]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - run: node scripts/audit.mjs --check
