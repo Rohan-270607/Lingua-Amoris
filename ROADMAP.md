@@ -138,11 +138,11 @@ Goal: the existing app on a `v2` branch, with tests, lint and the audit all runn
   - Accept: `npm run lint`, `npm test` and `npm run build` pass on the repo with one trivial test, and the app looks and behaves as before.
   - Verify: `npm run lint && npm test && npm run build`
   - Evidence: `npm run lint && npm test && npm run build` exit 0 on branch `v2` (lint clean; 1 test passed; build ok). No file under `src/` changed (`git status` shows only new config, kit files and package.json/lock). ESLint 9 used because eslint-plugin-react does not support ESLint 10. Relaxed in eslint.config.js: react/prop-types, react-hooks/refs, react-hooks/set-state-in-effect (53 + 2 findings in untouched working code). Commit: see git log `P0-T1`.
-- [ ] **P0-T2** Wire the audit
+- [x] **P0-T2** Wire the audit
   - Do: Confirm the Stop hook in `.claude/settings.json` really runs `scripts/audit.mjs` at the end of a turn (check that `.audit/last-report.md` gets a new time). Add `.audit/state.json` and `.audit/last-report.md` to `.gitignore`.
   - Accept: `node scripts/audit.mjs --check` prints PASS, and Evidence quotes the time from a report the hook wrote.
   - Verify: `node scripts/audit.mjs --check`
-  - Evidence:
+  - Evidence: The Stop hook fired on its own at the end of the P0-T1 turn: `.audit/last-report.md` says `Time: 2026-11-14T10:22:54Z`, 14 s after commit 4402380 (`10:22:40Z`), with no manual audit run in between. `node scripts/audit.mjs --check` prints `AUDIT PASS`. `.audit/state.json` and `.audit/last-report.md` are in .gitignore and no longer show in `git status`.
 - [ ] **P0-T3** Continuous integration
   - Do: A GitHub Actions workflow runs lint, tests, build and `node scripts/audit.mjs --check` on every push. It needs no Supabase keys.
   - Accept: The workflow file exists and its commands match the root scripts.
@@ -319,6 +319,7 @@ Format: `CR-00N | date | task | what is wrong with the spec | proposed change | 
 
 Newest first. One short entry per working session: what was done, what is next, anything surprising.
 
+- 2026-11-14 | P0-T2 done: hook confirmed firing from the report timestamp; audit scratch files git-ignored. Next: P0-T3.
 - 2026-11-14 | P0-T1 done: created `v2` from `main` (includes the unpushed polish commit), copied the kit in, added eslint 9 + vitest/jsdom/Testing Library, scripts `lint` and `test`, one smoke test. Three lint rules relaxed (see Evidence). Surprise: ESLint 10 is not supported by eslint-plugin-react. Next: P0-T2.
 - 2026-11-14 | Spec rewritten to match the real app (Supabase, JSX, Velvet & Gilt) before any task started. Needs a human re-lock. Next: P0-T1.
 

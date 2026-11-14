@@ -7,3 +7,7 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Audit scratch files
+.audit/state.json
+.audit/last-report.md
