@@ -143,11 +143,11 @@ Goal: the existing app on a `v2` branch, with tests, lint and the audit all runn
   - Accept: `node scripts/audit.mjs --check` prints PASS, and Evidence quotes the time from a report the hook wrote.
   - Verify: `node scripts/audit.mjs --check`
   - Evidence: The Stop hook fired on its own at the end of the P0-T1 turn: `.audit/last-report.md` says `Time: 2026-11-14T10:22:54Z`, 14 s after commit 4402380 (`10:22:40Z`), with no manual audit run in between. `node scripts/audit.mjs --check` prints `AUDIT PASS`. `.audit/state.json` and `.audit/last-report.md` are in .gitignore and no longer show in `git status`.
-- [~] **P0-T3** Continuous integration
+- [x] **P0-T3** Continuous integration
   - Do: A GitHub Actions workflow runs lint, tests, build and `node scripts/audit.mjs --check` on every push. It needs no Supabase keys.
   - Accept: The workflow file exists and its commands match the root scripts.
   - Verify: manual: the latest Actions run is green
-  - Evidence:
+  - Evidence: Workflow `.github/workflows/ci.yml` runs `npm ci`, `npm run lint`, `npm test`, `npm run build`, `node scripts/audit.mjs --check` on every push, no Supabase keys. GitHub Actions run for commit 1db514c on branch v2: completed, success, https://github.com/Rohan-270607/Lingua-Amoris/actions/runs/43585526396
 - [ ] **P0-T4** (smart) Map the existing app
   - Do: Read the whole codebase. Write `docs/current-state.md`: the screens, the components, the store and its two modes, the exact shape of a row in Supabase and of the data in localStorage, the row-level policies, and any bugs found. List every task in this roadmap that clashes with what exists.
   - Accept: The document exists, and each clash has a Change request.
@@ -319,6 +319,7 @@ Format: `CR-00N | date | task | what is wrong with the spec | proposed change | 
 
 Newest first. One short entry per working session: what was done, what is next, anything surprising.
 
+- 2026-11-14 | P0-T3 done: CI workflow added; pushed branch v2 (not main) and the run is green. Next: P0-T4 (read the whole app and write docs/current-state.md).
 - 2026-11-14 | P0-T2 done: hook confirmed firing from the report timestamp; audit scratch files git-ignored. Next: P0-T3.
 - 2026-11-14 | P0-T1 done: created `v2` from `main` (includes the unpushed polish commit), copied the kit in, added eslint 9 + vitest/jsdom/Testing Library, scripts `lint` and `test`, one smoke test. Three lint rules relaxed (see Evidence). Surprise: ESLint 10 is not supported by eslint-plugin-react. Next: P0-T2.
 - 2026-11-14 | Spec rewritten to match the real app (Supabase, JSX, Velvet & Gilt) before any task started. Needs a human re-lock. Next: P0-T1.
