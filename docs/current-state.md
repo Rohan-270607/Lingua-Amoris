@@ -94,6 +94,7 @@ Garamond, Comfortaa, Noto Serif Devanagari) load from the Google Fonts CDN in `i
 6. **Anyone can edit or delete anything** on the shared board. That is the intended shape, and it is listed under the roadmap's honest limits.
 7. **A free Supabase project pauses after about a week idle.** The app now says so instead of showing an empty list (fixed earlier), but it is still an outage.
 8. `lib/random.js` is unused.
+9. **Shared mode still writes the seeds to localStorage.** `useQuotesStore` runs `useLocalStorage` in both modes, so a browser on the live site holds the five `seed-*` verses under `lingua-amoris.quotes.v1`. They are never shown there. A migration of "old localStorage data" must not mistake them for the user's verses (pinned by a test in `test/current-behaviour.test.jsx`).
 
 ## 8. Roadmap tasks that clash with what exists
 

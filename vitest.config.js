@@ -9,5 +9,8 @@ export default defineConfig({
     globals: false,
     include: ['test/**/*.test.{js,jsx}'],
     setupFiles: ['test/setup.js'],
+    // Vitest would otherwise read the repo's .env and point shared-mode code at the
+    // live Supabase project. Blank here, tests that want shared mode mock the client.
+    env: { VITE_SUPABASE_URL: '', VITE_SUPABASE_ANON_KEY: '' },
   },
 })

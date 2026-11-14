@@ -5,6 +5,7 @@ import SealedLetter from '../components/SealedLetter'
 import { useQuotes } from '../store/QuotesContext'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { EASE_OUT } from '../lib/motion'
+import { buildExport, downloadJson } from '../lib/backup'
 
 // The epigraph, and what it says for anyone who wants it plainly.
 const EPIGRAPH_TRANSLATION = 'There is only one happiness in this life: to love and be loved.'
@@ -102,6 +103,13 @@ export default function Archive() {
 
   const openQuote = quotes.find((q) => q.id === openId) ?? null
   const closeLetter = useCallback(() => setOpenId(null), [])
+
+  // Everything that is loaded, plus this browser's bookmarks, as one JSON file.
+  const exportVerses = () =>
+    downloadJson(
+      'lingua-amoris-' + new Date().toISOString().slice(0, 10) + '.json',
+      buildExport(quotes, bookmarks),
+    )
 
   return (
     <div className="px-5 pb-4 sm:px-8">
@@ -262,6 +270,18 @@ export default function Archive() {
               onOpen={setOpenId}
             />
           ))}
+        </div>
+      )}
+
+      {!loading && !loadError && quotes.length > 0 && (
+        <div className="mt-10 flex justify-center">
+          <button
+            type="button"
+            onClick={exportVerses}
+            className="font-sans rounded-full px-4 py-3 text-[11px] tracking-[0.24em] text-rosedust/45 uppercase outline-none transition-colors duration-300 hover:text-champagne focus-visible:ring-1 focus-visible:ring-champagne"
+          >
+            Export my verses ({quotes.length})
+          </button>
         </div>
       )}
 
